@@ -22,6 +22,33 @@ const TABS = [
   'Student planning'
 ];
 
+function BrandBlock({ subtitle }) {
+  return (
+    <div className="brand">
+      <div className="brandIconWrap">
+        <School size={18} />
+      </div>
+      <div>
+        <h1>ClassPulse</h1>
+        <p>{subtitle}</p>
+      </div>
+    </div>
+  );
+}
+
+function DashboardHeader({ subtitle, onOpenClassroom, canOpenClassroom }) {
+  return (
+    <header className="appHeader dashboardHeader">
+      <BrandBlock subtitle={subtitle} />
+      {canOpenClassroom && (
+        <button type="button" className="ghostButton" onClick={onOpenClassroom}>
+          Open classroom explorer <ArrowRight size={16} />
+        </button>
+      )}
+    </header>
+  );
+}
+
 export default function App() {
   const [mode, setMode] = useState('admin');
   const [activeTab, setActiveTab] = useState(TABS[0]);
@@ -49,15 +76,7 @@ export default function App() {
   if (mode === 'classroom' && data) {
     return (
       <main className="appShell">
-        <header className="appHeader">
-          <div className="brand">
-            <School size={18} />
-            <div>
-              <h1>ClassPulse</h1>
-              <p>Shared behavior documentation and response system</p>
-            </div>
-          </div>
-        </header>
+        <DashboardHeader subtitle="Shared behavior documentation and response system" />
         <ClassroomView classrooms={data.classrooms} onBack={() => setMode('admin')} />
       </main>
     );
@@ -65,20 +84,16 @@ export default function App() {
 
   return (
     <main className="appShell">
-      <header className="appHeader">
-        <div className="brand">
-          <School size={18} />
-          <div>
-            <h1>ClassPulse</h1>
-            <p>Shared behavior documentation and response system</p>
-          </div>
-        </div>
-        {!loading && !error && data && (
-          <button type="button" className="ghostButton" onClick={() => setMode('classroom')}>
-            Open classroom explorer <ArrowRight size={16} />
-          </button>
-        )}
-      </header>
+      <section className="dashboardHero panel">
+        <DashboardHeader
+          subtitle="Behavior dashboard for internal school operations"
+          onOpenClassroom={() => setMode('classroom')}
+          canOpenClassroom={!loading && !error && !!data}
+        />
+        <p className="heroSubtext">
+          Weekly incident trends, staff follow-up consistency, and restricted student planning in one view.
+        </p>
+      </section>
 
       {loading && (
         <Panel title="Loading dashboard data">
