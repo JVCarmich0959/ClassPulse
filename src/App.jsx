@@ -49,9 +49,11 @@ export default function App() {
   if (mode === 'classroom' && data) {
     return (
       <main className="appShell">
-        <header className="appHeader">
+        <header className="appHeader dashboardHeader">
           <div className="brand">
-            <School size={18} />
+            <div className="brandIconWrap">
+              <School size={18} />
+            </div>
             <div>
               <h1>ClassPulse</h1>
               <p>Shared behavior documentation and response system</p>
@@ -65,20 +67,28 @@ export default function App() {
 
   return (
     <main className="appShell">
-      <header className="appHeader">
-        <div className="brand">
-          <School size={18} />
-          <div>
-            <h1>ClassPulse</h1>
-            <p>Shared behavior documentation and response system</p>
+      <section className="dashboardHero panel">
+        <header className="appHeader dashboardHeader">
+          <div className="brand">
+            <div className="brandIconWrap">
+              <School size={18} />
+            </div>
+            <div>
+              <h1>ClassPulse</h1>
+              <p>Behavior dashboard for internal school operations</p>
+            </div>
           </div>
-        </div>
-        {!loading && !error && data && (
-          <button type="button" className="ghostButton" onClick={() => setMode('classroom')}>
-            Open classroom explorer <ArrowRight size={16} />
-          </button>
-        )}
-      </header>
+          {!loading && !error && data && (
+            <button type="button" className="ghostButton" onClick={() => setMode('classroom')}>
+              Open classroom explorer <ArrowRight size={16} />
+            </button>
+          )}
+        </header>
+
+        <p className="heroSubtext">
+          Weekly incident trends, staff follow-up consistency, and restricted student planning in one view.
+        </p>
+      </section>
 
       {loading && (
         <Panel title="Loading dashboard data">
