@@ -16,14 +16,22 @@ function topEntries(map, limit = Infinity) {
 
 export function buildWeeklySeries(rows) {
   const byWeek = countBy(rows, (row) => row.weekKey || 'Unknown');
-  return sortWeekKeys(Object.keys(byWeek)).map((weekKey, index) => ({
+  const ordered = sortWeekKeys(Object.keys(byWeek)).map((weekKey, index) => ({
     week: weekKey === 'Unknown' ? `Wk ${index + 1}` : formatWeekLabel(weekKey),
-    incidents: byWeek[weekKey]
+    incidents: byWeek[weekKey],
+    days: 5,
+    note: ''
   }));
+  return ordered.map((row, i) => {
+    const rate = row.incidents / Math.max(1, row.days);
+    const last3 = ordered.slice(Math.max(0, i - 2), i + 1).map((w) => w.incidents / Math.max(1, w.days));
+    const ma = last3.reduce((sum, v) => sum + v, 0) / Math.max(1, last3.length);
+    return { ...row, rate, ma };
+  });
 }
 
 export function buildGradeSummary(rows) {
-  return topEntries(countBy(rows, (row) => row.grade)).map(([grade, incidents]) => ({ grade, incidents }));
+  return topEntries(countBy(rows, (row) => row.grade)).map(([grade, incidents]) => ({ grade, incidents, n: incidents }));
 }
 
 export function buildSpecialsSummary(rows) {
@@ -44,7 +52,7 @@ export function buildSpecialsSummary(rows) {
       const loggedDays = summary.days.size;
       const incidentsPerDay = loggedDays ? summary.incidents / loggedDays : summary.incidents;
       const coverage = Math.min(1, loggedDays / 20);
-      return { specials, incidentsPerDay, coverage, loggedDays };
+      return { specials, name: specials, incidentsPerDay, perDay: incidentsPerDay, coverage, loggedDays, days: loggedDays };
     })
     .sort((a, b) => b.incidentsPerDay - a.incidentsPerDay);
 }
@@ -57,7 +65,7 @@ export function buildBehaviorSummary(rows) {
     });
   });
 
-  return topEntries(counts).map(([behavior, incidents]) => ({ behavior, incidents }));
+  return topEntries(counts).map(([behavior, incidents]) => ({ behavior, incidents, type: behavior, n: incidents }));
 }
 
 export function buildTimingSummary(rows) {
@@ -65,8 +73,8 @@ export function buildTimingSummary(rows) {
   const blockMap = countBy(rows, (row) => row.hourBlock || 'Unknown');
   const heatmapMap = countBy(rows, (row) => `${row.dayOfWeek || 'Unknown'}|${row.hourBlock || 'Unknown'}`);
 
-  const dow = Object.entries(dowMap).map(([day, incidents]) => ({ day, incidents }));
-  const timeBlocks = Object.entries(blockMap).map(([block, incidents]) => ({ block, incidents }));
+  const dow = Object.entries(dowMap).map(([day, incidents]) => ({ day, incidents, rate: incidents }));
+  const timeBlocks = Object.entries(blockMap).map(([block, incidents]) => ({ block, incidents, n: incidents, uncertain: false }));
   const heatmap = Object.entries(heatmapMap).map(([key, value]) => {
     const [day, hour] = key.split('|');
     return { day, hour, value };
@@ -154,8 +162,10 @@ export function buildStudentFollowupSummary(rows) {
   return Object.values(studentMap)
     .map((item) => ({
       studentId: item.studentId,
+      name: item.studentId,
       grade: item.grade,
       incidents: item.incidents,
+      n: item.incidents,
       timingCoverage: item.incidents ? item.confirmedTimeCount / item.incidents : 0,
       fieldCompleteness: item.incidents ? item.followupCount / item.incidents : 0,
       homeContactRate: item.incidents ? item.homeContactCount / item.incidents : 0,
@@ -207,29 +217,34 @@ export function buildDashboardData(rows) {
   const { specialsNorm, monthly, consistency } = buildCoverageSummary(rows);
   const outcomes = buildOutcomesSummary(rows);
 
-  const topClasses = classrooms.slice(0, 5).map((row) => ({ classroom: row.name, incidents: row.incidents }));
+  const topClasses = classrooms.slice(0, 8).map((row) => ({ classroom: row.name, incidents: row.incidents, cls: row.name, n: row.incidents }));
   const incidents = rows.length;
   const studentsWith4Plus = students.filter((student) => student.incidents >= 4).length;
 
+  const missingBehavior = rows.filter((row) => row.behaviors.includes('Unknown')).length;
+  const missingSpecials = rows.filter((row) => row.specials === 'Unknown').length;
+  const missingTime = rows.filter((row) => !row.hasConfirmedTime).length;
+  const missingStudent = rows.filter((row) => row.studentId === 'Restricted-Unknown').length;
   const dq = [
-    'Specials-only logging scope: classroom incidents outside specials are not included.',
-    `${Math.round((1 - rows.filter((row) => row.hasTrigger).length / Math.max(1, incidents)) * 100)}% of incident records are missing a documented trigger.`,
-    `${Math.round((1 - rows.filter((row) => row.hasFollowUp).length / Math.max(1, incidents)) * 100)}% of records are missing follow-up action detail.`,
-    `${Math.round((1 - rows.filter((row) => row.hasConfirmedTime).length / Math.max(1, incidents)) * 100)}% of records use inferred or missing incident time.`
+    { label: 'Behavior type missing', pct: Math.round((missingBehavior / Math.max(1, incidents)) * 100), n: missingBehavior, color: 'amber' },
+    { label: 'Specials class missing', pct: Math.round((missingSpecials / Math.max(1, incidents)) * 100), n: missingSpecials, color: 'amber' },
+    { label: 'Incident time unknown', pct: Math.round((missingTime / Math.max(1, incidents)) * 100), n: missingTime, color: 'alert' },
+    { label: 'Student name missing', pct: Math.round((missingStudent / Math.max(1, incidents)) * 100), n: missingStudent, color: 'green' }
   ];
 
   const kpis = [
-    { label: 'Total incidents logged', value: incidents },
-    { label: 'Students with 4+ incidents', value: studentsWith4Plus },
-    { label: 'Specials logging coverage', value: `${Math.round((specialsNorm.reduce((sum, row) => sum + row.coverage, 0) / Math.max(1, specialsNorm.length)) * 100)}%` },
-    { label: 'Home contact rate', value: `${Math.round(outcomes.homeContactRate * 100)}%` }
+    { label: 'Total incidents', value: String(incidents), sub: 'Live rows loaded' },
+    { label: 'Per school day', value: (incidents / Math.max(1, weekly.length * 5)).toFixed(1), sub: 'Rolling week estimate' },
+    { label: 'Color chart used', value: `${Math.round((rows.filter((r) => r.chartUsed).length / Math.max(1, incidents)) * 100)}%`, sub: 'Across submitted incidents' },
+    { label: 'Home contacted', value: `${Math.round(outcomes.homeContactRate * 100)}%`, sub: 'From form responses', flag: true },
+    { label: 'Incident time known', value: `${Math.round((rows.filter((r) => r.hasConfirmedTime).length / Math.max(1, incidents)) * 100)}%`, sub: 'Confirmed incident time' }
   ];
 
   const roadmap = [
-    'Review field validation in the referral form to reduce missing trigger and follow-up values.',
-    'Use weekly trend checks in team meetings to align intervention plans.',
-    'Review classrooms with repeat incidents and low chart use for targeted coaching.',
-    'Document intervention response notes before weekly coordination meetings.'
+    { title: 'Form quality checks', body: 'Review missing trigger and follow-up fields each week before analysis.' },
+    { title: 'Intervention coordination', body: 'Use weekly trends to align classroom supports before escalation.' },
+    { title: 'Chart-use coaching', body: 'Prioritize classes with repeat incidents and low chart-use consistency.' },
+    { title: 'Data consistency', body: 'Keep student identifiers stable so repeat counts remain accurate.' }
   ];
 
   return {

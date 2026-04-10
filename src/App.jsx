@@ -26,6 +26,7 @@ import {
   TABS,
   SPEC_COLORS,
 } from "./data/dashboardData";
+import { useDashboardData } from "./hooks/useDashboardData";
 
 function Mn({ children, style = {}, className = "" }) {
   return <span className={className} style={{ ...MONO, ...style }}>{children}</span>;
@@ -521,6 +522,47 @@ function Followup() {
   );
 }
 
+function Outcomes({ students = [], outcomes }) {
+  const highSupportHighIncidents = students.filter((s) => (s.chartUseRate ?? 0) >= 0.7 && (s.n ?? s.incidents ?? 0) >= 4);
+  const lowSupportHighIncidents = students.filter((s) => (s.chartUseRate ?? 0) < 0.4 && (s.n ?? s.incidents ?? 0) >= 4);
+  const repeatAfterContact = students.filter((s) => (s.homeContactRate ?? 0) >= 0.4 && (s.n ?? s.incidents ?? 0) >= 3);
+
+  const cards = [
+    { id: "high", title: "High chart use + high incidents", rows: highSupportHighIncidents, color: T.accent },
+    { id: "low", title: "Low chart use + high incidents", rows: lowSupportHighIncidents, color: T.alert },
+    { id: "contact", title: "Home contact + repeat incidents", rows: repeatAfterContact, color: T.amber },
+  ];
+
+  return (
+    <motion.div {...fade} className="space-y-3">
+      <Box
+        title="Fidelity vs outcomes"
+        sub="Computed from submitted form rows and grouped for intervention planning">
+        <p className="text-[11px] leading-[1.6]" style={{ color: T.textDim }}>
+          {outcomes?.notes || "Use this view to identify where implementation fidelity and outcomes diverge. Validate with classroom and support-team context before action."}
+        </p>
+      </Box>
+      <div className="grid gap-3 xl:grid-cols-3">
+        {cards.map((card) => (
+          <Box key={card.id} title={card.title} right={<Mn style={{ color: card.color }}>{card.rows.length}</Mn>}>
+            <div className="space-y-2">
+              {card.rows.slice(0, 6).map((row) => (
+                <div key={row.name || row.studentId} className="flex items-center justify-between text-[11px]">
+                  <span style={{ color: T.text }}>{row.name || row.studentId}</span>
+                  <Mn style={{ color: T.textDim }}>{row.n ?? row.incidents}</Mn>
+                </div>
+              ))}
+              {card.rows.length === 0 && (
+                <p className="text-[10px]" style={{ color: T.textDim }}>No students in this slice.</p>
+              )}
+            </div>
+          </Box>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
 // ─── Classroom data ───────────────────────────────────────────────────────────
 const classrooms = [
   { id:"1-Beckett", label:"1st – Beckett", grade:"1", total:5, chart:60, home:0,
@@ -911,6 +953,7 @@ function ClassroomView({ onBack }) {
 export default function BehaviorDashboard() {
   const [tab,  setTab]  = useState("overview");
   const [mode, setMode] = useState("admin"); // "admin" | "classroom"
+  const { data } = useDashboardData();
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -1002,6 +1045,7 @@ export default function BehaviorDashboard() {
           {tab === "overview"  && <Overview  key="overview"  />}
           {tab === "timing"    && <Timing    key="timing"    />}
           {tab === "coverage"  && <Coverage  key="coverage"  />}
+          {tab === "outcomes"  && <Outcomes students={data?.students} outcomes={data?.outcomes} key="outcomes"  />}
           {tab === "followup"  && <Followup  key="followup"  />}
         </AnimatePresence>
       </div>
