@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 import Panel from '../components/Panel';
 
-export default function OutcomesView({ students }) {
+export default function OutcomesView({ data }) {
+  const { students } = data;
+
   const buckets = useMemo(() => {
     const highChartHighIncidents = students.filter((s) => s.chartUseRate >= 0.7 && s.incidents >= 6);
     const lowChartHighIncidents = students.filter((s) => s.chartUseRate < 0.4 && s.incidents >= 5);

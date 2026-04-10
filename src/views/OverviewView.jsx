@@ -11,7 +11,9 @@ import {
 } from 'recharts';
 import Panel from '../components/Panel';
 
-export default function OverviewView({ weekly, grades, specialsNorm, topClasses, behaviors }) {
+export default function OverviewView({ data }) {
+  const { weekly, grades, specialsNorm, topClasses, behaviors } = data;
+
   return (
     <div className="viewGrid twoCol">
       <Panel title="Weekly incident rate">

@@ -2,7 +2,9 @@ import { useMemo } from 'react';
 import Panel from '../components/Panel';
 import Note from '../components/Note';
 
-export default function FollowupView({ students, roadmap }) {
+export default function FollowupView({ data }) {
+  const { students, roadmap } = data;
+
   const maxIncidents = useMemo(
     () => (students.length ? Math.max(...students.map((student) => student.incidents)) : 0),
     [students]

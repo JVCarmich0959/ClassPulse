@@ -14,7 +14,9 @@ import Panel from '../components/Panel';
 import Note from '../components/Note';
 import ConsistencyTable from '../components/ConsistencyTable';
 
-export default function CoverageView({ specialsNorm, consistency, monthly }) {
+export default function CoverageView({ data }) {
+  const { specialsNorm, consistency, monthly } = data;
+
   return (
     <div className="viewGrid twoCol">
       <Panel title="Specials logging coverage">
