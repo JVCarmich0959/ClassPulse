@@ -10,7 +10,9 @@ import {
 import Panel from '../components/Panel';
 import HeatmapGrid from '../components/HeatmapGrid';
 
-export default function TimingView({ dow, timeBlocks, heatmap }) {
+export default function TimingView({ data }) {
+  const { dow, timeBlocks, heatmap } = data;
+
   return (
     <div className="viewGrid twoCol">
       <Panel title="Incidents per school day by weekday">
