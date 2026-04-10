@@ -1,0 +1,359 @@
+:root {
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #dce8ff;
+  background: #0b1526;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #0b1526;
+  color: #dce8ff;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+.appShell {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 1rem 1rem 2rem;
+}
+
+.appHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.brand p,
+.muted {
+  margin: 0;
+  color: #9db2d7;
+  font-size: 0.88rem;
+}
+
+.ghostButton {
+  border: 1px solid #2b3f62;
+  background: #111f36;
+  color: #dce8ff;
+  border-radius: 10px;
+  padding: 0.55rem 0.8rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.kpiGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 0.7rem;
+  margin-bottom: 0.8rem;
+}
+
+.kpiCard,
+.panel {
+  background: #111f36;
+  border: 1px solid #2b3f62;
+  border-radius: 10px;
+}
+
+.kpiCard {
+  padding: 0.8rem;
+}
+
+.kpiCard span {
+  color: #9db2d7;
+  font-size: 0.78rem;
+}
+
+.kpiCard strong {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 1.3rem;
+}
+
+.dqStrip {
+  background: #152845;
+  border: 1px solid #2b3f62;
+  border-radius: 10px;
+  margin-bottom: 0.8rem;
+  padding: 0.75rem;
+}
+
+.dqHeading {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: #ffcf70;
+  margin-bottom: 0.45rem;
+}
+
+.dqStrip ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: #c8d8f8;
+  font-size: 0.86rem;
+}
+
+.tabNav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.8rem;
+}
+
+.tabNav button {
+  border: 1px solid #2b3f62;
+  background: #111f36;
+  color: #c8d8f8;
+  padding: 0.5rem 0.7rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.tabNav button.active {
+  background: #20375a;
+  color: #fff;
+}
+
+.viewGrid {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.viewGrid.twoCol {
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.viewGrid.singleCol {
+  grid-template-columns: 1fr;
+}
+
+.panel {
+  padding: 0.8rem;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.6rem;
+}
+
+.panelHeader h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.panelHeader p {
+  margin: 0.2rem 0 0;
+  color: #9db2d7;
+  font-size: 0.8rem;
+}
+
+.chartBox {
+  width: 100%;
+  height: 250px;
+}
+
+.plainList {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.plainList li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.6rem;
+  padding: 0.45rem 0;
+  border-bottom: 1px solid #223652;
+  font-size: 0.86rem;
+}
+
+.plainList.compact li {
+  padding: 0.35rem 0;
+}
+
+.heatmapWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.heatmapHeaderRow,
+.heatmapRow {
+  display: grid;
+  grid-template-columns: 66px repeat(5, minmax(0, 1fr));
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.heatmapHeaderRow span,
+.heatmapRow strong {
+  color: #9db2d7;
+  font-size: 0.78rem;
+}
+
+.heatCell {
+  border: 1px solid #2b3f62;
+  border-radius: 6px;
+  text-align: center;
+  padding: 0.35rem 0;
+  font-size: 0.78rem;
+}
+
+.consistencyTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+
+.consistencyTable th,
+.consistencyTable td {
+  padding: 0.45rem;
+  border-bottom: 1px solid #223652;
+  text-align: left;
+}
+
+.note {
+  border: 1px solid #2b3f62;
+  border-radius: 8px;
+  padding: 0.6rem;
+  background: #162a47;
+  margin-bottom: 0.6rem;
+}
+
+.note strong {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.85rem;
+}
+
+.note p {
+  margin: 0;
+  color: #c8d8f8;
+  font-size: 0.83rem;
+}
+
+.note-warning {
+  border-color: #78613a;
+}
+
+.outcomeCards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.7rem;
+}
+
+.bucketCount {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.studentBars {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.studentBars li {
+  margin-bottom: 0.5rem;
+}
+
+.studentBarLabel {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.84rem;
+  margin-bottom: 0.2rem;
+}
+
+.studentBarTrack {
+  width: 100%;
+  height: 9px;
+  border-radius: 99px;
+  background: #203352;
+}
+
+.studentBarFill {
+  display: block;
+  height: 100%;
+  border-radius: 99px;
+  background: #5fa7ff;
+}
+
+.roadmap {
+  margin: 0;
+  padding-left: 1rem;
+  color: #c8d8f8;
+  font-size: 0.86rem;
+}
+
+.classroomLayout {
+  display: grid;
+  grid-template-columns: minmax(240px, 290px) 1fr;
+  gap: 0.8rem;
+}
+
+.classroomListPanel h3 {
+  margin-top: 0;
+}
+
+.searchInput {
+  width: 100%;
+  margin: 0.5rem 0 0.8rem;
+  background: #0d1a30;
+  border: 1px solid #2b3f62;
+  border-radius: 8px;
+  padding: 0.45rem;
+  color: #dce8ff;
+}
+
+.classroomGroups h4 {
+  margin: 0.35rem 0;
+  color: #9db2d7;
+  font-size: 0.8rem;
+}
+
+.listButton {
+  width: 100%;
+  text-align: left;
+  border: 1px solid #2b3f62;
+  background: #0f1d33;
+  color: #dce8ff;
+  border-radius: 8px;
+  margin-bottom: 0.35rem;
+  padding: 0.45rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.listButton.active {
+  background: #20375a;
+}
+
+@media (max-width: 980px) {
+  .classroomLayout {
+    grid-template-columns: 1fr;
+  }
+}
