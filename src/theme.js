@@ -1,19 +1,36 @@
-const theme = {
-  colors: {
-    bg: '#0b1526',
-    panel: '#111f36',
-    panelAlt: '#152845',
-    border: '#2b3f62',
-    text: '#dce8ff',
-    textMuted: '#9db2d7',
-    accent: '#5fa7ff',
-    warning: '#ffcf70',
-    danger: '#ff8a8a',
-    success: '#7fd2a5'
-  },
-  radius: {
-    md: '10px'
-  }
+export const T = {
+  bg: "#09101a",
+  surface: "#0e1621",
+  surfaceHi: "#131e2c",
+  border: "rgba(100,130,180,0.13)",
+  borderHi: "rgba(100,130,180,0.24)",
+  accent: "#4a8fff",
+  alert: "#e8604a",
+  amber: "#d4952e",
+  green: "#38b87a",
+  muted: "#3d4f65",
+  text: "#b8cde0",
+  textDim: "#5f7590",
+  textBright: "#e8f0f8",
+  grid: "rgba(100,130,180,0.07)",
+  series: ["#4a8fff", "#38b87a", "#d4952e", "#e8604a", "#9b87f5", "#36b8d4", "#e07340", "#3d4f65"],
 };
 
-export default theme;
+export const MONO = { fontFamily: "'DM Mono', 'Fira Mono', monospace" };
+
+export const tip = {
+  contentStyle: {
+    background: T.surface,
+    border: `1px solid ${T.borderHi}`,
+    borderRadius: 6,
+    fontSize: 11,
+    color: T.text,
+  },
+  labelStyle: { color: T.textBright, fontWeight: 600, ...MONO },
+  itemStyle: { color: T.textDim },
+};
+
+export const ax = {
+  stroke: "transparent",
+  tick: { fill: T.textDim, fontSize: 10, ...MONO },
+};
