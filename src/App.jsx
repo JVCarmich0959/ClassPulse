@@ -522,7 +522,7 @@ function Followup({ students = [], roadmap = [] }) {
   );
 }
 
-function Outcomes({ students = [], outcomes = null }) {
+function Outcomes({ students = [], outcomes }) {
   const highSupportHighIncidents = students.filter((s) => (s.chartUseRate ?? 0) >= 0.7 && (s.n ?? s.incidents ?? 0) >= 4);
   const lowSupportHighIncidents = students.filter((s) => (s.chartUseRate ?? 0) < 0.4 && (s.n ?? s.incidents ?? 0) >= 4);
   const repeatAfterContact = students.filter((s) => (s.homeContactRate ?? 0) >= 0.4 && (s.n ?? s.incidents ?? 0) >= 3);
@@ -1012,9 +1012,7 @@ function ClassroomView({ onBack, classrooms }) {
 export default function BehaviorDashboard() {
   const [tab,  setTab]  = useState("overview");
   const [mode, setMode] = useState("admin"); // "admin" | "classroom"
-  const { data, loading, error } = useDashboardData();
-  const dashboard = data || fallbackDashboardData;
-  const classroomRows = toClassroomViewModel(dashboard.classrooms);
+  const { data } = useDashboardData();
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -1119,21 +1117,11 @@ export default function BehaviorDashboard() {
 
         {/* Content */}
         <AnimatePresence mode="wait">
-          {tab === "overview"  && (
-            <Overview
-              weekly={dashboard.weekly}
-              calFlags={dashboard.calFlags || fallbackCalFlags}
-              grades={dashboard.grades}
-              specialsNorm={dashboard.specialsNorm}
-              topClasses={dashboard.topClasses}
-              behaviors={dashboard.behaviors}
-              key="overview"
-            />
-          )}
-          {tab === "timing"    && <Timing dow={dashboard.dow} timeBlocks={dashboard.timeBlocks} heatmap={dashboard.heatmap} key="timing" />}
-          {tab === "coverage"  && <Coverage consistency={dashboard.consistency} monthly={dashboard.monthly} key="coverage" />}
-          {tab === "outcomes"  && <Outcomes students={dashboard.students} outcomes={dashboard.outcomes} key="outcomes"  />}
-          {tab === "followup"  && <Followup students={dashboard.students} roadmap={dashboard.roadmap} key="followup"  />}
+          {tab === "overview"  && <Overview  key="overview"  />}
+          {tab === "timing"    && <Timing    key="timing"    />}
+          {tab === "coverage"  && <Coverage  key="coverage"  />}
+          {tab === "outcomes"  && <Outcomes students={data?.students} outcomes={data?.outcomes} key="outcomes"  />}
+          {tab === "followup"  && <Followup  key="followup"  />}
         </AnimatePresence>
       </div>
     </div>
