@@ -8,24 +8,25 @@ import {
 } from "recharts";
 import { T, MONO, tip, ax } from "./theme";
 import {
-  kpis,
-  dq,
-  weekly,
-  calFlags,
-  grades,
-  specialsNorm,
-  dow,
-  behaviors,
-  timeBlocks,
-  heatmap,
-  topClasses,
-  monthly,
-  consistency,
-  students,
-  roadmap,
+  kpis as fallbackKpis,
+  dq as fallbackDq,
+  weekly as fallbackWeekly,
+  calFlags as fallbackCalFlags,
+  grades as fallbackGrades,
+  specialsNorm as fallbackSpecialsNorm,
+  dow as fallbackDow,
+  behaviors as fallbackBehaviors,
+  timeBlocks as fallbackTimeBlocks,
+  heatmap as fallbackHeatmap,
+  topClasses as fallbackTopClasses,
+  monthly as fallbackMonthly,
+  consistency as fallbackConsistency,
+  students as fallbackStudents,
+  roadmap as fallbackRoadmap,
   TABS,
   SPEC_COLORS,
 } from "./data/dashboardData";
+import { useDashboardData } from "./hooks/useDashboardData";
 
 function Mn({ children, style = {}, className = "" }) {
   return <span className={className} style={{ ...MONO, ...style }}>{children}</span>;
@@ -58,9 +59,9 @@ function Box({ title, sub, children, right }) {
 }
 
 // ─── Heatmap ──────────────────────────────────────────────────────────────────
-function HeatmapGrid() {
+function HeatmapGrid({ rows }) {
   const cols = ["Mon","Tue","Wed","Thu","Fri"];
-  const max = useMemo(() => Math.max(...heatmap.flatMap(r => cols.map(c => r[c]))), []);
+  const max = useMemo(() => Math.max(...rows.flatMap(r => cols.map(c => r[c] || 0))), [rows]);
   return (
     <div className="rounded overflow-hidden text-[10px]" style={{ border:`1px solid ${T.border}` }}>
       <div className="grid" style={{ gridTemplateColumns:"76px repeat(5,1fr)" }}>
@@ -69,7 +70,7 @@ function HeatmapGrid() {
           <div key={c} className="py-1.5 text-center font-semibold uppercase tracking-wide"
             style={{ background:T.surfaceHi, color:T.textDim }}>{c}</div>
         ))}
-        {heatmap.map((row,ri) => (
+        {rows.map((row,ri) => (
           <React.Fragment key={row.block}>
             <div className="px-2 py-2" style={{ ...MONO, color:T.textDim, background: ri%2 ? T.surface : T.surfaceHi }}>
               {row.block}
@@ -91,7 +92,7 @@ function HeatmapGrid() {
 }
 
 // ─── Consistency table ────────────────────────────────────────────────────────
-function ConsistencyTable() {
+function ConsistencyTable({ rows }) {
   const pctC  = p => p>=80 ? T.green : p>=50 ? T.amber : T.alert;
   const lagC  = h => h<=2.5 ? T.green : h<=4 ? T.amber : T.alert;
   const chartC = v => v>=60 ? T.green : v<25 ? T.alert : T.amber;
@@ -108,7 +109,7 @@ function ConsistencyTable() {
           </tr>
         </thead>
         <tbody>
-          {consistency.map((r,i) => (
+          {rows.map((r,i) => (
             <tr key={r.name} style={{ background: i%2 ? T.surface : T.surfaceHi+"88" }}>
               <td className="px-3 py-2 font-medium" style={{ color:T.textBright }}>{r.name}</td>
               <td className="px-3 py-2">
@@ -170,7 +171,7 @@ const fade = {
   transition: { duration:0.2 },
 };
 
-function Overview() {
+function Overview({ weekly = [], calFlags = fallbackCalFlags, grades = [], specialsNorm = [], topClasses = [], behaviors = [] }) {
   const maxRate = Math.max(...weekly.map(d => d.rate));
   return (
     <motion.div {...fade} className="space-y-3">
@@ -320,7 +321,7 @@ function Overview() {
   );
 }
 
-function Timing() {
+function Timing({ dow = [], timeBlocks = [], heatmap = [] }) {
   const maxDow = Math.max(...dow.map(d => d.rate));
   return (
     <motion.div {...fade} className="space-y-3">
@@ -366,7 +367,7 @@ function Timing() {
 
       <Box title="Incident time by day and hour block"
         sub="Confirmed incident times only · 9am–3pm window · before-9am excluded">
-        <HeatmapGrid />
+        <HeatmapGrid rows={heatmap} />
         <p className="mt-2 text-[10px] leading-5" style={{ color:T.textDim }}>
           106 of 248 records have submission time only and are excluded.
           Before-9am incidents appear in the chart above but are omitted from the grid due to timing ambiguity.
@@ -376,14 +377,14 @@ function Timing() {
   );
 }
 
-function Coverage() {
+function Coverage({ consistency = [], monthly = [] }) {
   return (
     <motion.div {...fade} className="space-y-3">
       <Box title="Specials logging coverage"
         sub="Active weeks = weeks with at least one incident logged · 11 weeks total in window">
         <Note>Music logged in only 4 of 11 weeks (36%). Music also has the highest median submission lag (6.8h) and the lowest confirmed incident-time rate (21%). This is consistent with delayed or infrequent form use. Cannot determine from data alone whether this reflects fewer incidents or incomplete logging.</Note>
         <Note>P.E. recorded 66 of its 97 incidents in March. Confirm with the teacher whether this reflects a change in documentation practice before drawing conclusions from the trend.</Note>
-        <ConsistencyTable />
+        <ConsistencyTable rows={consistency} />
       </Box>
 
       <div className="grid gap-3 xl:grid-cols-[1.3fr_1fr]">
@@ -419,7 +420,7 @@ function Coverage() {
   );
 }
 
-function Followup() {
+function Followup({ students = [], roadmap = [] }) {
   return (
     <motion.div {...fade} className="space-y-3">
       <div className="flex items-start gap-2.5 rounded p-3"
@@ -517,6 +518,47 @@ function Followup() {
           ))}
         </div>
       </Box>
+    </motion.div>
+  );
+}
+
+function Outcomes({ students = [], outcomes = null }) {
+  const highSupportHighIncidents = students.filter((s) => (s.chartUseRate ?? 0) >= 0.7 && (s.n ?? s.incidents ?? 0) >= 4);
+  const lowSupportHighIncidents = students.filter((s) => (s.chartUseRate ?? 0) < 0.4 && (s.n ?? s.incidents ?? 0) >= 4);
+  const repeatAfterContact = students.filter((s) => (s.homeContactRate ?? 0) >= 0.4 && (s.n ?? s.incidents ?? 0) >= 3);
+
+  const cards = [
+    { id: "high", title: "High chart use + high incidents", rows: highSupportHighIncidents, color: T.accent },
+    { id: "low", title: "Low chart use + high incidents", rows: lowSupportHighIncidents, color: T.alert },
+    { id: "contact", title: "Home contact + repeat incidents", rows: repeatAfterContact, color: T.amber },
+  ];
+
+  return (
+    <motion.div {...fade} className="space-y-3">
+      <Box
+        title="Fidelity vs outcomes"
+        sub="Computed from submitted form rows and grouped for intervention planning">
+        <p className="text-[11px] leading-[1.6]" style={{ color: T.textDim }}>
+          {outcomes?.notes || "Use this view to identify where implementation fidelity and outcomes diverge. Validate with classroom and support-team context before action."}
+        </p>
+      </Box>
+      <div className="grid gap-3 xl:grid-cols-3">
+        {cards.map((card) => (
+          <Box key={card.id} title={card.title} right={<Mn style={{ color: card.color }}>{card.rows.length}</Mn>}>
+            <div className="space-y-2">
+              {card.rows.slice(0, 6).map((row) => (
+                <div key={row.name || row.studentId} className="flex items-center justify-between text-[11px]">
+                  <span style={{ color: T.text }}>{row.name || row.studentId}</span>
+                  <Mn style={{ color: T.textDim }}>{row.n ?? row.incidents}</Mn>
+                </div>
+              ))}
+              {card.rows.length === 0 && (
+                <p className="text-[10px]" style={{ color: T.textDim }}>No students in this slice.</p>
+              )}
+            </div>
+          </Box>
+        ))}
+      </div>
     </motion.div>
   );
 }
@@ -661,8 +703,67 @@ const classrooms = [
     specials:{PE:0,Technology:0,Art:0,Music:0,Unknown:0} },
 ]
 
+const fallbackDashboardData = {
+  kpis: fallbackKpis,
+  dq: fallbackDq,
+  weekly: fallbackWeekly,
+  calFlags: fallbackCalFlags,
+  grades: fallbackGrades,
+  specialsNorm: fallbackSpecialsNorm,
+  dow: fallbackDow,
+  behaviors: fallbackBehaviors,
+  timeBlocks: fallbackTimeBlocks,
+  heatmap: fallbackHeatmap,
+  topClasses: fallbackTopClasses,
+  monthly: fallbackMonthly,
+  consistency: fallbackConsistency,
+  students: fallbackStudents,
+  roadmap: fallbackRoadmap,
+  classrooms,
+  outcomes: null,
+};
+
+function toClassroomViewModel(classroomRows = []) {
+  if (!classroomRows.length) return classrooms;
+  return classroomRows.map((row) => {
+    const weekly = (row.weekly || []).map((w) => ({ week: w.week, n: w.n ?? w.incidents ?? 0 }));
+    const byDowBase = { Mon: 0, Tue: 0, Wed: 0, Thu: 0, Fri: 0 };
+    (row.byDay || []).forEach((d) => { byDowBase[d.day] = d.n ?? d.incidents ?? 0; });
+    const specials = { PE: 0, Technology: 0, Art: 0, Music: 0, Unknown: 0 };
+    (row.bySpecials || []).forEach((s) => { specials[s.label || s.name] = s.value ?? s.n ?? 0; });
+    const total = row.total ?? row.incidents ?? 0;
+    const chart = row.chart ?? 0;
+    const home = row.home ?? 0;
+
+    return {
+      id: row.id || row.name,
+      label: row.label || row.name,
+      grade: row.grade || "Unknown",
+      total,
+      chart,
+      home,
+      behaviors: (row.behaviors || row.byBehavior || []).map((b) => ({ type: b.type || b.label, n: b.n ?? b.value ?? 0 })),
+      students: (row.students || row.byStudent || []).map((s) => ({ name: s.name || s.studentId, n: s.n ?? s.incidents ?? 0 })),
+      weekly,
+      byDow: byDowBase,
+      specials,
+      noData: total === 0,
+    };
+  });
+}
+
 // ─── Classroom view (teacher-facing) ─────────────────────────────────────────
-function ClassroomView({ onBack }) {
+function ClassroomView({ onBack, classrooms }) {
+  if (!classrooms?.length) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background:T.bg, color:T.text }}>
+        <div className="rounded px-4 py-3 text-[12px]" style={{ background:T.surface, border:`1px solid ${T.border}` }}>
+          No classroom records available.
+        </div>
+      </div>
+    );
+  }
+
   const [selected, setSelected] = useState(classrooms[0].id);
   const cls = classrooms.find(c => c.id === selected) || classrooms[0];
 
@@ -859,7 +960,7 @@ function ClassroomView({ onBack }) {
                       <Tooltip {...tip} />
                       <Bar dataKey="n" radius={[3,3,0,0]}>
                         {specData.map(d => (
-                          <Cell key={d.name} fill={SPEC_COLORS[d.name] || T.muted} />
+                          <Cell key={d.name} fill={T[SPEC_COLORS[d.name]] || T.muted} />
                         ))}
                       </Bar>
                     </BarChart>
@@ -911,6 +1012,9 @@ function ClassroomView({ onBack }) {
 export default function BehaviorDashboard() {
   const [tab,  setTab]  = useState("overview");
   const [mode, setMode] = useState("admin"); // "admin" | "classroom"
+  const { data, loading, error } = useDashboardData();
+  const dashboard = data || fallbackDashboardData;
+  const classroomRows = toClassroomViewModel(dashboard.classrooms);
 
   useEffect(() => {
     const link = document.createElement("link");
@@ -920,8 +1024,18 @@ export default function BehaviorDashboard() {
     return () => { try { document.head.removeChild(link); } catch(_) {} };
   }, []);
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background:T.bg, color:T.text }}>
+        <div className="rounded px-4 py-3 text-[12px]" style={{ background:T.surface, border:`1px solid ${T.border}` }}>
+          Loading dashboard data…
+        </div>
+      </div>
+    );
+  }
+
   if (mode === "classroom") {
-    return <ClassroomView onBack={() => setMode("admin")} />;
+    return <ClassroomView classrooms={classroomRows} onBack={() => setMode("admin")} />;
   }
 
   return (
@@ -949,9 +1063,15 @@ export default function BehaviorDashboard() {
           </button>
         </div>
 
+        {error && (
+          <div className="rounded p-2.5 mb-4 text-[11px]" style={{ background:T.alert+"10", border:`1px solid ${T.alert}44`, color:T.textDim }}>
+            Live data could not be loaded. Showing the latest available dashboard dataset.
+          </div>
+        )}
+
         {/* KPIs — no icons, no motion stagger on every card, just the numbers */}
         <div className="grid grid-cols-2 gap-2 mb-4 md:grid-cols-5">
-          {kpis.map((k,i) => (
+          {dashboard.kpis.map((k,i) => (
             <motion.div key={k.label}
               initial={{ opacity:0 }} animate={{ opacity:1 }}
               transition={{ delay:i*0.04, duration:0.2 }}>
@@ -977,14 +1097,14 @@ export default function BehaviorDashboard() {
             Data limitations affecting interpretation
           </div>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            {dq.map(q => (
+            {dashboard.dq.map(q => (
               <div key={q.label}>
                 <div className="flex justify-between mb-1">
                   <span className="text-[10px]" style={{ color:T.textDim }}>{q.label}</span>
-                  <Mn className="text-[10px] font-semibold" style={{ color:q.color }}>{q.n}</Mn>
+                  <Mn className="text-[10px] font-semibold" style={{ color:T[q.color] || T.textDim }}>{q.n}</Mn>
                 </div>
                 <div className="h-1 rounded-full overflow-hidden" style={{ background:T.muted+"40" }}>
-                  <div className="h-full rounded-full" style={{ width:`${Math.max(q.pct,0.5)}%`, background:q.color }} />
+                  <div className="h-full rounded-full" style={{ width:`${Math.max(q.pct,0.5)}%`, background:T[q.color] || T.muted }} />
                 </div>
                 <div className="text-[10px] mt-0.5" style={{ color:T.textDim+"99" }}>{q.pct}%</div>
               </div>
@@ -999,10 +1119,21 @@ export default function BehaviorDashboard() {
 
         {/* Content */}
         <AnimatePresence mode="wait">
-          {tab === "overview"  && <Overview  key="overview"  />}
-          {tab === "timing"    && <Timing    key="timing"    />}
-          {tab === "coverage"  && <Coverage  key="coverage"  />}
-          {tab === "followup"  && <Followup  key="followup"  />}
+          {tab === "overview"  && (
+            <Overview
+              weekly={dashboard.weekly}
+              calFlags={dashboard.calFlags || fallbackCalFlags}
+              grades={dashboard.grades}
+              specialsNorm={dashboard.specialsNorm}
+              topClasses={dashboard.topClasses}
+              behaviors={dashboard.behaviors}
+              key="overview"
+            />
+          )}
+          {tab === "timing"    && <Timing dow={dashboard.dow} timeBlocks={dashboard.timeBlocks} heatmap={dashboard.heatmap} key="timing" />}
+          {tab === "coverage"  && <Coverage consistency={dashboard.consistency} monthly={dashboard.monthly} key="coverage" />}
+          {tab === "outcomes"  && <Outcomes students={dashboard.students} outcomes={dashboard.outcomes} key="outcomes"  />}
+          {tab === "followup"  && <Followup students={dashboard.students} roadmap={dashboard.roadmap} key="followup"  />}
         </AnimatePresence>
       </div>
     </div>

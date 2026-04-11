@@ -122,10 +122,11 @@ export const roadmap = [
 ];
 
 export const TABS = [
-  { id: "overview", label: "Overview" },
-  { id: "timing", label: "Incident timing" },
-  { id: "coverage", label: "Specials log coverage" },
-  { id: "followup", label: "Student follow-up" },
+  { id: "overview", label: "System overview" },
+  { id: "timing", label: "Timing & transitions" },
+  { id: "coverage", label: "Fidelity & coverage" },
+  { id: "outcomes", label: "Fidelity vs outcomes" },
+  { id: "followup", label: "Student planning" },
 ];
 
 export const SPEC_COLORS = {
