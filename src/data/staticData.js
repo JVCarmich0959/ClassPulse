@@ -119,13 +119,13 @@ const roadmap = [
 // ─── Specials color map ───────────────────────────────────────────────────────
 const classrooms = [
   { id:"1-Beckett", label:"1st – Beckett", grade:"1", total:5, chart:60, home:0,
-    behaviors:[{type:"Verbal disruption",n:2},{type:"Noncompliance",n:1},{type:"Peer conflict",n:1},{type:"Out of seat",n:1},{type:"Sleeping",n:1},{type:"Unspecified",n:2}],
+    behaviors:[{type:"Verbal disruption",n:2},{type:"Noncompliance",n:1},{type:"Peer conflict",n:1},{type:"Out of seat",n:1},{type:"Sleeping/Disengaged",n:1},{type:"Unspecified",n:2}],
     students:[{name:"Lucas Pulley",n:2},{name:"Seneca Jackson",n:2},{name:"Infinity Deitz-Hutchison",n:1}],
     weekly:[{week:"Jan W4",n:2},{week:"Mar W13",n:1},{week:"W14",n:2}],
     byDow:{Mon:1,Tue:2,Wed:0,Thu:2,Fri:0},
     specials:{PE:2,Technology:0,Art:1,Music:0,Unknown:2} },
   { id:"1-Cosetti", label:"1st – Cosetti", grade:"1", total:6, chart:33, home:17,
-    behaviors:[{type:"Verbal disruption",n:2},{type:"Noncompliance",n:3},{type:"Off-task",n:1},{type:"Emotional distress",n:1},{type:"Physical behavior",n:1},{type:"Out of seat",n:1},{type:"Device misuse",n:1},{type:"Sleeping",n:1},{type:"Unspecified",n:1}],
+    behaviors:[{type:"Verbal disruption",n:2},{type:"Noncompliance",n:3},{type:"Off-task",n:1},{type:"Emotional distress",n:1},{type:"Physical behavior",n:1},{type:"Out of seat",n:1},{type:"Device misuse",n:1},{type:"Sleeping/Disengaged",n:1},{type:"Unspecified",n:1}],
     students:[{name:"Tyon Buckner",n:2},{name:"Zayana Fisher",n:1},{name:"James Champion",n:1}],
     weekly:[{week:"Jan W4",n:1},{week:"Feb W8",n:1},{week:"Feb W9",n:1},{week:"Mar W10",n:1},{week:"Mar W13",n:1},{week:"W14",n:1}],
     byDow:{Mon:0,Tue:0,Wed:2,Thu:3,Fri:1},
@@ -137,7 +137,7 @@ const classrooms = [
     byDow:{Mon:4,Tue:0,Wed:4,Thu:2,Fri:2},
     specials:{PE:5,Technology:4,Art:0,Music:2,Unknown:1} },
   { id:"1-Worsely", label:"1st – Worsely", grade:"1", total:6, chart:17, home:17,
-    behaviors:[{type:"Verbal disruption",n:1},{type:"Noncompliance",n:2},{type:"Off-task",n:4},{type:"Emotional distress",n:1},{type:"Peer conflict",n:1},{type:"Out of seat",n:1},{type:"Sleeping",n:1}],
+    behaviors:[{type:"Verbal disruption",n:1},{type:"Noncompliance",n:2},{type:"Off-task",n:4},{type:"Emotional distress",n:1},{type:"Peer conflict",n:1},{type:"Out of seat",n:1},{type:"Sleeping/Disengaged",n:1}],
     students:[{name:"Juelz Crawford",n:2},{name:"Kailee Williams",n:2},{name:"Delilah Zeigler",n:1},{name:"Barrett Boutte",n:1}],
     weekly:[{week:"Feb W7",n:2},{week:"Mar W10",n:1},{week:"W14",n:3}],
     byDow:{Mon:1,Tue:2,Wed:3,Thu:0,Fri:0},
@@ -203,7 +203,7 @@ const classrooms = [
     byDow:{Mon:8,Tue:6,Wed:6,Thu:0,Fri:2},
     specials:{PE:6,Technology:8,Art:6,Music:0,Unknown:2} },
   { id:"5-Coles", label:"5th – Coles", grade:"5", total:9, chart:33, home:0,
-    behaviors:[{type:"Verbal disruption",n:2},{type:"Noncompliance",n:2},{type:"Off-task",n:4},{type:"Emotional distress",n:3},{type:"Physical behavior",n:2},{type:"Sleeping",n:1},{type:"Unspecified",n:2}],
+    behaviors:[{type:"Verbal disruption",n:2},{type:"Noncompliance",n:2},{type:"Off-task",n:4},{type:"Emotional distress",n:3},{type:"Physical behavior",n:2},{type:"Sleeping/Disengaged",n:1},{type:"Unspecified",n:2}],
     students:[{name:"Elijah Sanders",n:2},{name:"Lacey Musser",n:1},{name:"Kendra Champion",n:1},{name:"Fynntynn VandenBroeke",n:1},{name:"Other",n:4}],
     weekly:[{week:"Jan W5",n:1},{week:"Feb W6",n:1},{week:"Feb W7",n:2},{week:"Mar W10",n:5}],
     byDow:{Mon:1,Tue:1,Wed:1,Thu:5,Fri:1},
@@ -215,13 +215,13 @@ const classrooms = [
     byDow:{Mon:0,Tue:6,Wed:3,Thu:6,Fri:3},
     specials:{PE:8,Technology:8,Art:0,Music:1,Unknown:1} },
   { id:"5-Smith", label:"5th – Smith", grade:"5", total:22, chart:32, home:23,
-    behaviors:[{type:"Verbal disruption",n:9},{type:"Noncompliance",n:6},{type:"Off-task",n:5},{type:"Emotional distress",n:3},{type:"Peer conflict",n:4},{type:"Physical behavior",n:1},{type:"Out of seat",n:1},{type:"Device misuse",n:2},{type:"Sleeping",n:1},{type:"Unspecified",n:5}],
+    behaviors:[{type:"Verbal disruption",n:9},{type:"Noncompliance",n:6},{type:"Off-task",n:5},{type:"Emotional distress",n:3},{type:"Peer conflict",n:4},{type:"Physical behavior",n:1},{type:"Out of seat",n:1},{type:"Device misuse",n:2},{type:"Sleeping/Disengaged",n:1},{type:"Unspecified",n:5}],
     students:[{name:"Gabriel Smith",n:6},{name:"Reagan Best",n:3},{name:"Braiden Roa",n:1},{name:"Other",n:12}],
     weekly:[{week:"Jan W4",n:1},{week:"Jan W5",n:1},{week:"Feb W7",n:3},{week:"Feb W8",n:2},{week:"Feb W9",n:4},{week:"Mar W10",n:2},{week:"Mar W12",n:2},{week:"Mar W13",n:7}],
     byDow:{Mon:11,Tue:3,Wed:7,Thu:0,Fri:1},
     specials:{PE:7,Technology:11,Art:3,Music:0,Unknown:1} },
   { id:"EC", label:"EC (Price)", grade:"EC", total:6, chart:67, home:17,
-    behaviors:[{type:"Verbal disruption",n:1},{type:"Noncompliance",n:2},{type:"Off-task",n:2},{type:"Emotional distress",n:3},{type:"Peer conflict",n:1},{type:"Physical behavior",n:2},{type:"Out of seat",n:1},{type:"Sleeping",n:1},{type:"Unspecified",n:1}],
+    behaviors:[{type:"Verbal disruption",n:1},{type:"Noncompliance",n:2},{type:"Off-task",n:2},{type:"Emotional distress",n:3},{type:"Peer conflict",n:1},{type:"Physical behavior",n:2},{type:"Out of seat",n:1},{type:"Sleeping/Disengaged",n:1},{type:"Unspecified",n:1}],
     students:[{name:"Vincent Newberry",n:4},{name:"Cally Boseman",n:1},{name:"Wizdom Grantham",n:1}],
     weekly:[{week:"Feb W6",n:1},{week:"Feb W7",n:2},{week:"Mar W10",n:1},{week:"Mar W11",n:1},{week:"W14",n:1}],
     byDow:{Mon:1,Tue:0,Wed:0,Thu:2,Fri:3},
@@ -233,7 +233,7 @@ const classrooms = [
     byDow:{Mon:5,Tue:2,Wed:7,Thu:3,Fri:0},
     specials:{PE:7,Technology:6,Art:2,Music:1,Unknown:1} },
   { id:"K-Helms", label:"K – Helms", grade:"K", total:6, chart:67, home:0,
-    behaviors:[{type:"Verbal disruption",n:4},{type:"Noncompliance",n:4},{type:"Off-task",n:1},{type:"Emotional distress",n:2},{type:"Out of seat",n:1},{type:"Device misuse",n:2},{type:"Sleeping",n:1}],
+    behaviors:[{type:"Verbal disruption",n:4},{type:"Noncompliance",n:4},{type:"Off-task",n:1},{type:"Emotional distress",n:2},{type:"Out of seat",n:1},{type:"Device misuse",n:2},{type:"Sleeping/Disengaged",n:1}],
     students:[{name:"Trayvon / Travon Williams",n:4},{name:"Acestin Britton",n:1},{name:"Dontae Champion",n:1}],
     weekly:[{week:"Feb W7",n:1},{week:"Feb W8",n:1},{week:"Feb W9",n:1},{week:"Mar W10",n:2},{week:"Mar W12",n:1}],
     byDow:{Mon:1,Tue:3,Wed:0,Thu:2,Fri:0},
@@ -245,7 +245,7 @@ const classrooms = [
     byDow:{Mon:0,Tue:5,Wed:1,Thu:1,Fri:0},
     specials:{PE:5,Technology:1,Art:0,Music:1,Unknown:0} },
   { id:"K-Wing", label:"K – Wing", grade:"K", total:19, chart:63, home:21,
-    behaviors:[{type:"Verbal disruption",n:6},{type:"Noncompliance",n:5},{type:"Off-task",n:5},{type:"Emotional distress",n:2},{type:"Peer conflict",n:2},{type:"Physical behavior",n:3},{type:"Out of seat",n:6},{type:"Device misuse",n:3},{type:"Sleeping",n:3},{type:"Unspecified",n:5}],
+    behaviors:[{type:"Verbal disruption",n:6},{type:"Noncompliance",n:5},{type:"Off-task",n:5},{type:"Emotional distress",n:2},{type:"Peer conflict",n:2},{type:"Physical behavior",n:3},{type:"Out of seat",n:6},{type:"Device misuse",n:3},{type:"Sleeping/Disengaged",n:3},{type:"Unspecified",n:5}],
     students:[{name:"Eternity Deitz-Hutchison",n:5},{name:"Dominic Hardy",n:4},{name:"Foster Langdon",n:4},{name:"Alivia Best",n:1},{name:"Other",n:5}],
     weekly:[{week:"Jan W4",n:2},{week:"Jan W5",n:3},{week:"Feb W7",n:3},{week:"Feb W8",n:4},{week:"Feb W9",n:2},{week:"Mar W12",n:2},{week:"W14",n:3}],
     byDow:{Mon:3,Tue:3,Wed:12,Thu:0,Fri:1},
@@ -256,6 +256,13 @@ const classrooms = [
     specials:{PE:0,Technology:0,Art:0,Music:0,Unknown:0} },
 ]
 
+
+
+const firstAidLogs = [
+  { id: 1, scholar: 'London German', homeroom: '4th – Edwards', specials: 'P.E.', incidentDate: '2026-03-11', incidentTime: '10:15 AM', injuryDescription: 'Scraped knee during relay transition', treatment: 'Cleaned and bandaged in nurse station', staffNotified: 'Nurse + homeroom teacher', returnedToActivity: true, homeContact: true, notes: 'Returned after 10 minutes.', submittedBy: 'Coach Rivera', schoolYear: '2025-2026', schoolId: 'WSA' },
+  { id: 2, scholar: 'Gabriel Smith', homeroom: '5th – Smith', specials: 'Technology', incidentDate: '2026-02-26', incidentTime: '1:40 PM', injuryDescription: 'Minor finger pinch from Chromebook cart', treatment: 'Ice pack and observation', staffNotified: 'Front office', returnedToActivity: true, homeContact: false, notes: 'No swelling after 15 minutes.', submittedBy: 'Ms. Patel', schoolYear: '2025-2026', schoolId: 'WSA' },
+  { id: 3, scholar: 'Austin Crowder', homeroom: '2nd – Clark', specials: 'Art', incidentDate: '2026-03-31', incidentTime: '11:05 AM', injuryDescription: 'Paper cut on right thumb', treatment: 'Washed and bandaged', staffNotified: 'Homeroom teacher', returnedToActivity: true, homeContact: false, notes: '', submittedBy: 'Ms. Greene', schoolYear: '2025-2026', schoolId: 'WSA' },
+];
 // ─── Classroom view (teacher-facing) ─────────────────────────────────────────
 
 export const staticData = {
@@ -274,5 +281,6 @@ export const staticData = {
   consistency,
   students,
   roadmap,
+  firstAidLogs,
   classrooms,
 };
