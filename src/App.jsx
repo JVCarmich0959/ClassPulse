@@ -34,7 +34,7 @@ export default function App() {
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
             <div className="text-[11px] mb-1" style={{ color: T.textDim }}>Wayne STEM Academy · Specials behavior log · Jan 21 – Apr 1, 2026</div>
-            <h1 className="text-xl font-semibold mb-1" style={{ color: T.textBright, ...MONO }}>Student behavior incidents</h1>
+            <h1 className="text-xl font-semibold mb-1" style={{ color: T.textBright, ...MONO }}>Scholar behavior incidents</h1>
             <p className="text-[12px]" style={{ color: T.textDim }}>248 incidents across P.E., Technology, Art, and Music. Rates normalized by the WSA school calendar. Data quality limitations are noted throughout.</p>
           </div>
           <button onClick={() => setMode('classroom')} className="flex-shrink-0 text-[11px] px-3 py-1.5 rounded mt-1" style={{ background: T.surface, border: `1px solid ${T.border}`, color: T.textDim, whiteSpace: 'nowrap' }}>Classroom view →</button>
